@@ -1,0 +1,11 @@
+# Folders
+/.cache
+/.git
+/dist
+/node_modules
+
+# Files
+/npm-debug.log
+
+# Configuration, exclude from image, use as volume
+config.json

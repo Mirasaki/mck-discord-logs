@@ -1,0 +1,78 @@
+{
+	"name": "mck-discord-logs",
+	"version": "1.0.0",
+	"description": "An application that sends batched Discord webhook notifications for common MuchCarKey events.",
+	"main": "dist/src/index.js",
+	"license": "ISC",
+	"author": {
+		"name": "Mirasaki (Richard Hillebrand)",
+		"email": "me@mirasaki.dev",
+		"url": "https://mirasaki.dev"
+	},
+	"scripts": {
+		"setup:linux": "cp config.example.json config.json",
+		"setup:windows": "copy config.example.json config.json",
+		"clean:dist": "rimraf ./dist",
+		"clean:modules": "rimraf ./node_modules",
+		"clean": "npm run clean:dist && npm run clean:modules",
+		"prebuild": "npm run clean:dist",
+		"build": "tsc",
+		"build:watch": "tsc -w",
+		"dev": "npm run start:dev",
+		"prestart": "npm run build",
+		"start": "node --enable-source-maps dist/src/index.js --NODE_ENV=production",
+		"start:dev": "ts-node-dev --respawn --notify --transpile-only src/index.ts --NODE_ENV=development",
+		"pretest": "npm run build",
+		"test": "mocha dist/test/**/*.js",
+		"test:dev": "ts-mocha test/**/*.spec.ts -w --watch-files '**/*.ts'",
+		"lint": "eslint 'src/**/*.{ts,tsx,js,jsx}'",
+		"lint:fix": "eslint --fix 'src/**/*.{ts,tsx,js,jsx}'",
+		"pm2:start": "pm2 start",
+		"pm2:stop": "pm2 stop",
+		"pm2:restart": "pm2 stop",
+		"pm2:reset": "pm2 reset",
+		"pm2:purge": "npm run pm2:stop && npm run pm2:reset && npm run pm2:delete",
+		"pm2:delete": "pm2 delete",
+		"docker:build": "docker build --tag mck-discord-logs .",
+		"docker:start": "docker run -it -p 3000:3000 --env-file ./.env -d --name my-discord-bot mck-discord-logs",
+		"docker:stop": "docker stop my-discord-bot",
+		"docker:restart": "docker restart my-discord-bot",
+		"docker:kill": "docker rm -f my-discord-bot",
+		"docker:purge": "docker rm -fv my-discord-bot",
+		"docker:shell": "docker run -it --rm my-discord-bot sh",
+		"docker:logs": "docker logs my-discord-bot -f",
+		"commit": "cz",
+		"prepare": "husky install"
+	},
+	"dependencies": {
+		"common-tags": "^1.8.2",
+		"discord.js": "^14.14.1",
+		"tail": "^2.2.6"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^17.7.1",
+		"@commitlint/config-conventional": "^17.7.0",
+		"@types/common-tags": "^1.8.1",
+		"@types/node": "^18.18.3",
+		"@types/tail": "^2.2.3",
+		"@typescript-eslint/eslint-plugin": "^6.7.5",
+		"@typescript-eslint/parser": "^6.7.5",
+		"cz-conventional-changelog": "^3.3.0",
+		"eslint": "^8.51.0",
+		"husky": "^8.0.3",
+		"lint-staged": "^14.0.1",
+		"rimraf": "^5.0.1",
+		"ts-node-dev": "^2.0.0",
+		"typescript": "^5.2.2"
+	},
+	"config": {
+		"commitizen": {
+			"path": "./node_modules/cz-conventional-changelog"
+		}
+	},
+	"lint-staged": {
+		"src/**/*.{js,jsx,ts,tsx,json}": [
+			"eslint --fix"
+		]
+	}
+}

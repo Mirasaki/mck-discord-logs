@@ -1,0 +1,20 @@
+{
+  "extension": "log",
+  "fileNamePattern": "MCKActivity_",
+  "webhookURL": "https://discord.com/api/webhooks/...",
+  "logFolderPath": "C:\\Users\\Administrator\\OmegaManager\\servers\\0\\profiles",
+  "moduleName": "much-car-key",
+  "themeColor": "#ff0000",
+  "compactOutput": false,
+  "excludeEnabled": false,
+  "excludeEvents": [
+    "IS_BEING_DELETED",
+    "INITIALIZED",
+    "ENTERED",
+    "UNLOCKED",
+    "STARTED",
+    "LOCKED",
+    "STOPPED",
+    "ASSIGNED_NEW_OWNER"
+  ]
+}
