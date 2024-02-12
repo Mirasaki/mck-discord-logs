@@ -6,7 +6,7 @@ const tag = `[log-tail/${appConfig.moduleName}]`;
 export const processedEMLogLines = new Set<string>();
 
 export const initLogFileWatcher = async () => {
-  let { tail, filePath } = await initFileWatcher(
+  const result = await initFileWatcher(
     appConfig.logFolderPath,
     handleLogLine,
     undefined,
@@ -14,6 +14,8 @@ export const initLogFileWatcher = async () => {
     0,
     appConfig.fileNamePattern
   );
+  if (result === null) return;
+  let { tail, filePath } = result;
 
   const webhook = new WebhookClient({ url: appConfig.webhookURL });
   setInterval(() => {
@@ -37,14 +39,16 @@ export const initLogFileWatcher = async () => {
     console.debug(`${tag} New file detected, switching to "${newestFilePath}"`);
     tail.unwatch();
     processedEMLogLines.clear();
-    ({ tail, filePath } = await initFileWatcher(
+    const result = await initFileWatcher(
       appConfig.logFolderPath,
       handleLogLine,
       undefined,
       appConfig.extension,
       0,
       appConfig.fileNamePattern
-    ));
+    );
+    if (result === null) return; // Logged inside function
+    ({ tail, filePath } = result);
   }, LOG_DELAY * 10);
 };
 

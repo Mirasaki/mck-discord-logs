@@ -8,8 +8,12 @@ export const findNewestFile = async (
   fileNamePattern?: string
 ): Promise<string | null> => {
   try {
-    const files = await readdir(directoryPath);
-    if (files.length === 0) return null;
+    const files = await readdir(directoryPath).catch((err) => {
+      console.error(`Error encountered while resolving latest file from "${directoryPath}"`);
+      console.error(err);
+      return null;
+    });
+    if (files === null || files.length === 0) return null;
 
     // Sort files by creation time (ctimeMs) in descending order
     let sortedFiles = await Promise.all(
